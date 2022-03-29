@@ -3,12 +3,13 @@
     "description": "Quick word suggestion for Worlde",
     "version": "0.0.1",
     "manifest_version": 3,
-
+    "icons": {
+        "128": "128.png"
+    },
     "content_scripts": [
         {
             "run_at": "document_start",
-            "matches": "https://www.nytimes.com/games/wordle/index.html",
-            "css": ["wordlesuggest.css"],
+            "matches": ["https://www.nytimes.com/games/wordle/index.html"],
             "js": ["wordlesuggest.js"]
         }
     ]

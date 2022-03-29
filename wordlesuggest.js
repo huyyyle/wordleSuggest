@@ -46,6 +46,27 @@ function handleGuess(string) {
     }
 }
 
-function grabGuess() {
-    var row = document.querySelector(game-row);
+function grabRows() {
+    x = document.querySelector("game-app");
+    x = x.shadowRoot;
+    x = x.querySelector("game-theme-manager");
+    x = x.querySelector("#game");
+    x = x.querySelector('#board-container');
+    x = x.querySelector('#board');
+    x = x.querySelectorAll('game-row');
+    return x;
 }
+
+function getCurrentRow(rows) {
+    var curRow;
+    for (const element of rows) {
+        firstTile = element.shadowRoot;
+        firstTile = firstTile.querySelector('game-tile');
+        if (!firstTile.hasAttribute('evaluation')) {
+            curRow = element.shadowRoot.querySelector('.row');
+            return curRow;
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', (event) => {console.log(getCurrentRow(grabRows()))});
