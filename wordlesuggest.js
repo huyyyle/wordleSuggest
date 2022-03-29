@@ -46,7 +46,7 @@ function handleGuess(string) {
     }
 }
 
-function grabRows() {
+function getInjectionSite() {
     x = document.querySelector("game-app");
     x = x.shadowRoot;
     x = x.querySelector("game-theme-manager");
@@ -57,16 +57,80 @@ function grabRows() {
     return x;
 }
 
-function getCurrentRow(rows) {
+function getCurRow(rows) {
     var curRow;
     for (const element of rows) {
         firstTile = element.shadowRoot;
         firstTile = firstTile.querySelector('game-tile');
         if (!firstTile.hasAttribute('evaluation')) {
-            curRow = element.shadowRoot.querySelector('.row');
+            curRow = element.shadowRoot;
             return curRow;
         }
     }
 }
 
-document.addEventListener('DOMContentLoaded', (event) => {console.log(getCurrentRow(grabRows()))});
+function view() {
+    setInterval(temp, 1000);
+}
+
+var CSSSet = false;
+function temp() {
+    injectionSite = getInjectionSite();
+    currentRow = getCurRow(injectionSite);
+    currentGuess = getCurGuess(currentRow);
+    if (CSSSet == false) {
+        addCSS(currentRow);
+        CSSSet = true;
+    }
+
+    if (currentGuess.length == 0) {
+        return;
+    }
+    displaySuggestion(currentRow, currentGuess);
+}
+
+function displaySuggestion(currentRow, currentGuess) {
+    tiles = currentRow.querySelector('.row').querySelectorAll('game-tile');
+    handleGuess(currentGuess);
+    curDict = dictStack[dictStack.length - 1];
+    if (curDict.length == 0) {
+        return;
+    }
+    suggestion = curDict[0];
+    for (var i = dictStack.length; i < 5; i++) {
+        addSuggestion(tiles[i], curDict[0].charAt(i - dictStack.length))
+    }
+}
+
+function addSuggestion(tile, letter) {
+    innerTile = tile.shadowRoot.querySelector('div');
+    innerTile.innerHTML = letter;
+    innerTile.setAttribute('data-state', 'suggest');
+}
+
+function addCSS(currentRow) {
+    tiles = currentRow.querySelector('.row').querySelectorAll('game-tile');
+    for (var i = 0; i < 5; i++) {
+        style = tiles[i].shadowRoot.querySelector('style');
+        style.innerHTML += 
+        ".tile[data-state = 'suggest'] {"
+            + "border: 2px solid var(--color-tone-4);"
+            + "color: gray;}";
+    }
+}
+
+function getCurGuess(currentRow) {
+    tiles = currentRow.querySelector('.row').querySelectorAll('game-tile');
+    guess = '';
+    for (let index = 0; index < tiles.length; index++) {
+        const tile = tiles[index];
+        if (tile.hasAttribute('letter')) {
+            guess += tile.getAttribute('letter');
+            continue;
+        }
+        break;
+    }
+    return guess;
+}
+
+document.addEventListener('DOMContentLoaded', (event) => {view()});
