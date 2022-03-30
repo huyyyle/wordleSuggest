@@ -21,4 +21,3 @@ For now, in order to install the extension, you'll have to download the repo, an
 - [ ] Added to Chrome Web Store.
 - [ ] Settings action menu.
 - [ ] Smarter word search (using given hints to narrow searches).
-- [ ] 
