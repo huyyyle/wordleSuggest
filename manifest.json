@@ -10,7 +10,7 @@
         {
             "run_at": "document_start",
             "matches": ["https://www.nytimes.com/games/wordle/index.html"],
-            "js": ["wordlesuggest.js"]
+            "js": ["wordlesuggest.js", "./src/controller.js","./src/model.js","./src/view.js" ]
         }
     ]
 }
