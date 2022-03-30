@@ -16,25 +16,16 @@ class wordleSuggestView {
 
     initializeView() {
         setTimeout(this.temp(), 1000);
-        console.log("WORKS");
-        setTimeout(this.temp(), 5000);
-        console.log("WORKS");
-        setTimeout(this.temp(), 10000);
-
     }
 
     temp() {
         this.#currentRow = this.getCurRow();
         this.#currentGuess = this.getCurGuess();
-        /* TEST */
-        this.#currentGuess = "aa";
-        /* */
         if (this.CSSSet == false) {
             this.addCSS();
             this.CSSSet = true;
         }
 
-        console.log(this.#currentGuess);
         if (this.#currentGuess.length == 0) {
             return;
         }
@@ -44,14 +35,15 @@ class wordleSuggestView {
     displaySuggestion() {
         var tiles = this.#currentRow.querySelector('.row').querySelectorAll('game-tile');
         this.#controller.makeGuess(this.#currentGuess);
-        var curDict = model.peekDictStack;
+        var curDict = this.#model.peekDictStack();
+        console.log(curDict);
         if (curDict.length == 0) {
             return;
         }
         //TODO: ADD A WAY TO GO TO NEXT IN DICT
         var suggestion = curDict[0];
-        for (var i = this.model.getdictStack.length; i < 5; i++) {
-            addSuggestion(tiles[i], curDict[0].charAt(i - dictStack.length))
+        for (var i = this.#model.getDictStack().length; i < 5; i++) {
+            this.addSuggestion(tiles[i], curDict[0].charAt(i - this.#model.getDictStack().length))
         }
     }
 
@@ -68,7 +60,6 @@ class wordleSuggestView {
 
     getCurRow() {
         var curRow;
-        console.log(this.#injectionSite);
         for (const element of this.#injectionSite) {
             var firstTile = element.shadowRoot;
             var firstTile = firstTile.querySelector('game-tile');
