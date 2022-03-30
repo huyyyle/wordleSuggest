@@ -3,7 +3,7 @@ wordleSuggest is a chrome extension that adds a autosuggest/autocomplete feature
 and it just works. This extension is only meant to be a quality of life addition to the Wordle game, and suggestions
 are taken alphabetically from the list of possible words.
 
-![wordleSugges demo](./demo/demo.gif)
+![wordleSugges demo](./demo/demo2.gif)
 
 ## How It Works
 Simply add the extension to chrome, and it will run when Wordle is opened. You can press Tab to cycle through
