@@ -1,7 +1,7 @@
 {
     "name": "WordleSuggest",
-    "description": "Quick word suggestion for Worlde",
-    "version": "0.0.1",
+    "description": "Word autocomplete for Wordle.",
+    "version": "1.0.0",
     "manifest_version": 3,
     "icons": {
         "128": "128.png"
