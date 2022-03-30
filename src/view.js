@@ -10,26 +10,50 @@ class wordleSuggestView {
         this.#controller = controller;
         this.#injectionSite = this.getInjectionSite();
         this.#currentGuess = '';
-        //temp
-        this.CSSSet = false;
+
+        //Init CSS
+        this.addCSS();
     }
 
     initializeView() {
-        setTimeout(this.temp(), 1000);
-    }
-
-    temp() {
         this.#currentRow = this.getCurRow();
         this.#currentGuess = this.getCurGuess();
-        if (this.CSSSet == false) {
-            this.addCSS();
-            this.CSSSet = true;
-        }
+        this.keyboardEventHandling();
+    }
 
-        if (this.#currentGuess.length == 0) {
+    keyboardEventHandling() {
+        document.addEventListener('keyup', (event) => {
+            if (event.key == 'Enter') {
+                console.log("ENTER EVENT HANDLED");
+                this.updateRow();
+            }
+            else {
+                this.updateView();
+            }
+
+        })
+
+    }
+
+    updateRow() {
+        this.#currentRow = this.getCurRow();
+    }
+
+    updateView() {
+        this.#currentGuess = this.getCurGuess();
+        if (this.#currentGuess.length == 0 || this.#currentGuess.length == 5) {
+            this.clearSuggestion();
             return;
         }
         this.displaySuggestion();
+
+    }
+
+    clearSuggestion() {
+        var tiles = this.#currentRow.querySelector('.row').querySelectorAll('game-tile');
+        for (var i = this.#model.getDictStack().length; i < 5; i++) {
+            this.removeSuggestion(tiles[i]);
+        }
     }
 
     displaySuggestion() {
@@ -38,6 +62,7 @@ class wordleSuggestView {
         var curDict = this.#model.peekDictStack();
         console.log(curDict);
         if (curDict.length == 0) {
+            this.clearSuggestion();
             return;
         }
         //TODO: ADD A WAY TO GO TO NEXT IN DICT
@@ -76,15 +101,20 @@ class wordleSuggestView {
         innerTile.setAttribute('data-state', 'suggest');
     }
 
+    removeSuggestion(tile) {
+        tile.shadowRoot.querySelector('div').setAttribute('data-state', 'empty');
+    }
+
     addCSS() {
-        //TODO: MAKE IT GLOBAL
-        var tiles = this.#currentRow.querySelector('.row').querySelectorAll('game-tile');
-        for (var i = 0; i < 5; i++) {
-            var style = tiles[i].shadowRoot.querySelector('style');
-            style.innerHTML += 
-            ".tile[data-state = 'suggest'] {"
-                + "border: 2px solid var(--color-tone-4);"
-                + "color: gray;}";
+        for (const element of this.#injectionSite) {
+            var tiles = element.shadowRoot.querySelector('.row').querySelectorAll('game-tile');
+            for (var i = 0; i < 5; i++) {
+                var style = tiles[i].shadowRoot.querySelector('style');
+                style.innerHTML += 
+                ".tile[data-state = 'suggest'] {"
+                    + "border: 2px solid var(--color-tone-4);"
+                    + "color: gray;}";
+            }
         }
     }
 
