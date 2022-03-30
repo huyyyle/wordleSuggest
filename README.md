@@ -15,6 +15,7 @@ For now, in order to install the extension, you'll have to download the repo, an
 ## TO DOs
 - [x] Basic functionalities (autocomplete, and cycle through suggestions) 3/28/2022
 - [x] Move to MVC structure 3/29/2022
+- [ ] Added to Chrome Web Store.
 - [ ] An actual Logo.
 - [ ] Word search performance optimzations.
 - [ ] Complete documetations.
