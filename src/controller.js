@@ -2,6 +2,7 @@ class wordleSuggestController {
     #model;
     #dictIndex;
 
+
     constructor(wordleSuggestModel) {
         this.#model = wordleSuggestModel;
         this.#dictIndex = 0;
@@ -16,16 +17,15 @@ class wordleSuggestController {
         }
     }
 
-    getSuggestion() {
+    updateSuggestion() {
         var curDict = this.#model.peekDictStack();
         if (curDict.length == 0) {
-            throw 'No Suggestions availiable';
+            this.#model.currentSuggestion = "";
         }
         if (this.#dictIndex == curDict.length - 1) {
             this.#dictIndex = 0;
         }
-        var retval = curDict[this.#dictIndex];
+        this.#model.currentSuggestion = curDict[this.#dictIndex];
         this.#dictIndex++;
-        return retval;
     }
 }
