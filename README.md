@@ -15,10 +15,11 @@ For now, in order to install the extension, you'll have to download the repo, an
 ## TO DOs
 - [x] Basic functionalities (autocomplete, and cycle through suggestions) 3/28/2022
 - [x] Move to MVC structure 3/29/2022
-- [ ] Added to Chrome Web Store.
+- [x] Refractor code for readability. 3/30/2022
+- [ ] Added to Chrome Web Store (in progress)
 - [x] An actual Logo.
 - [ ] Word search performance optimzations.
-- [ ] Complete documetations.
+- [x] Completed documetations.
 - [ ] Added to Chrome Web Store.
 - [ ] Settings action menu.
 - [ ] Smarter word search (using given hints to narrow searches).
