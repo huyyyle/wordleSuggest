@@ -7,6 +7,7 @@ class wordleSuggestModel {
 
         /* Guess Storage */
         this.guessStack = [];
+        this.currentSuggestion = "";
     }
 
     /**
