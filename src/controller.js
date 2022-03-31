@@ -16,16 +16,4 @@ class wordleSuggestController {
             this.#model.addGuess(letter);
         }
     }
-
-    updateSuggestion() {
-        var curDict = this.#model.peekDictStack();
-        if (curDict.length == 0) {
-            this.#model.currentSuggestion = "";
-        }
-        if (this.#dictIndex == curDict.length - 1) {
-            this.#dictIndex = 0;
-        }
-        this.#model.currentSuggestion = curDict[this.#dictIndex];
-        this.#dictIndex++;
-    }
 }

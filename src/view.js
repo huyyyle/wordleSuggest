@@ -1,15 +1,22 @@
 class wordleSuggestView {
     #model;
     #controller;
+
     #injectionSite;
     #currentRow;
     #currentGuess;
 
+    #dictIndex;
+    #currentSuggestion;
+
     constructor(model, controller) {
         this.#model = model;
         this.#controller = controller;
+
         this.#injectionSite = this.getInjectionSite();
-        this.#currentGuess = '';
+        this.#currentGuess = "";
+        this.#currentSuggestion = "";
+        this.#dictIndex = 0;
 
         //Init CSS
         this.injectCSS();
@@ -28,64 +35,83 @@ class wordleSuggestView {
             if (event.key == 'Enter') {
                 this.updateRow();
             }
+            /* Three cases where suggestions are updated. Seperated for clarity.*/
             else if (event.key == 'Tab') {
-                this.cycleSuggestion();
-            }
-            else {
                 this.updateSuggestion();
+                this.displaySuggestion();
+            }
+            else if (event.key == 'Backspace') {
+                this.updateSuggestion();
+                this.displaySuggestion();
+            }
+            else if ((event.keyCode >= 65 && event.keyCode <= 90)){
+                this.updateSuggestion();
+                this.displaySuggestion();
             }
         })
 
     }
 
     /**
-     * 
-     */
-    cycleSuggestion() {
-        this.#controller.updateSuggestion();
-        this.displaySuggestion();
-        console.log(this.#model.currentSuggestion);
-    }
-
-    /**
-     * 
+     * Updates the current suggestion. 
+     * If the guess is still the same, cycle to the next suggestion.
+     * If the guess is different, update the current suggestion
+     * to the first one in the new possible list.
      */
     updateSuggestion() {
-        //check if the guess has changed since.
-        if (this.getCurGuess != this.#currentGuess) {
+        if (this.getCurGuess() != this.#currentGuess) {
             this.updateCurGuess();
             this.#controller.makeGuess(this.#currentGuess);
-            this.#controller.updateSuggestion();
+            this.#dictIndex = 0;
         }
-        console.log(this.#model.currentSuggestion);
-        this.displaySuggestion();
+        var curDict = this.#model.peekDictStack();
+        if (curDict.length == 0) {
+            this.#currentSuggestion = "";
+            return;
+        }
+        if (this.#dictIndex == curDict.length) {
+            this.#dictIndex = 0;
+        }
+        this.#currentSuggestion = curDict[this.#dictIndex];
+        this.#dictIndex++;
+
     }
 
     /**
-     * Show an autocomplete on screen for the first
-     * word possible from the current guess.
-     * @returns 
+     * If suggestions are availiable,
+     * update the tiles after what the user
+     * has typed to show a suggestion.
      */
     displaySuggestion() {
         this.clearSuggestion();
-        if (this.#model.currentSuggestion.length == 0) {
+        //if no suggestions are availiable, exit.
+        if (this.#currentSuggestion.length == 0) {
             return;
         }
         var tiles = this.#currentRow.querySelector('.row').querySelectorAll('game-tile');
-        var suggestion = this.#model.currentSuggestion;
+        var suggestion = this.#currentSuggestion;
         for (var i = 5 - suggestion.length; i < 5; i++) {
             this.addSuggestion(tiles[i], suggestion.charAt(i - this.#model.getDictStack().length))
         }
     }
 
     /**
-     * Clears the suggestion bar.
+     * Clears the current suggestion from the
+     * user view.
      */
-     clearSuggestion() {
+    clearSuggestion() {
         var tiles = this.#currentRow.querySelector('.row').querySelectorAll('game-tile');
         for (var i = this.#model.getDictStack().length; i < 5; i++) {
             this.removeSuggestion(tiles[i]);
         }
+    }
+
+    /**
+     * Convert a given tile back to the empty state.
+     * @param {*} tile element containing the tile.
+     */
+    removeSuggestion(tile) {
+        tile.shadowRoot.querySelector('div').setAttribute('data-state', 'empty');
     }
 
     /**
@@ -106,7 +132,7 @@ class wordleSuggestView {
     /**
      * Updates the current row selector.
      */
-     updateRow() {
+    updateRow() {
         this.#currentRow = this.getCurRow();
     }
 
@@ -136,14 +162,6 @@ class wordleSuggestView {
         var innerTile = tile.shadowRoot.querySelector('div');
         innerTile.innerHTML = letter;
         innerTile.setAttribute('data-state', 'suggest');
-    }
-
-    /**
-     * Convert a given tile back to the empty state.
-     * @param {*} tile element containing the tile.
-     */
-    removeSuggestion(tile) {
-        tile.shadowRoot.querySelector('div').setAttribute('data-state', 'empty');
     }
 
     /**
