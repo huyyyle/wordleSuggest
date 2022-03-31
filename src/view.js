@@ -12,16 +12,9 @@ class wordleSuggestView {
         this.#currentGuess = '';
 
         //Init CSS
-        this.addCSS();
-    }
+        this.injectCSS();
 
-    /**
-     * Create the initial view, and initialize basic
-     * variables. Initializes input handling.
-     */
-    initializeView() {
         this.updateRow();
-        this.updateCurGuess();
         this.keyboardEventHandling();
     }
 
@@ -36,27 +29,36 @@ class wordleSuggestView {
                 this.updateRow();
             }
             else if (event.key == 'Tab') {
-                this.updateView();
+                this.cycleSuggestion();
             }
             else {
-                this.updateCurGuess();
-                this.#controller.makeGuess(this.#currentGuess);
-                console.log(this.#currentGuess);
-                console.log(this.#model.currentSuggestion);
-                this.updateView();
+                this.updateSuggestion();
             }
-
         })
 
     }
 
     /**
-     * Updates the suggestion shown on screen.
-     * @returns null;
+     * 
      */
-    updateView() {
+    cycleSuggestion() {
+        this.#controller.updateSuggestion();
         this.displaySuggestion();
+        console.log(this.#model.currentSuggestion);
+    }
 
+    /**
+     * 
+     */
+    updateSuggestion() {
+        //check if the guess has changed since.
+        if (this.getCurGuess != this.#currentGuess) {
+            this.updateCurGuess();
+            this.#controller.makeGuess(this.#currentGuess);
+            this.#controller.updateSuggestion();
+        }
+        console.log(this.#model.currentSuggestion);
+        this.displaySuggestion();
     }
 
     /**
@@ -66,7 +68,6 @@ class wordleSuggestView {
      */
     displaySuggestion() {
         this.clearSuggestion();
-        this.#controller.updateSuggestion();
         if (this.#model.currentSuggestion.length == 0) {
             return;
         }
@@ -149,7 +150,7 @@ class wordleSuggestView {
      * Adds the custom CSS for a suggestive Wordle tile, to
      * every tile.
      */
-    addCSS() {
+    injectCSS() {
         for (const element of this.#injectionSite) {
             var tiles = element.shadowRoot.querySelector('.row').querySelectorAll('game-tile');
             for (var i = 0; i < 5; i++) {
@@ -162,11 +163,15 @@ class wordleSuggestView {
         }
     }
 
+    updateCurGuess() {
+        this.#currentGuess = this.getCurGuess();
+    }
+
     /**
      * Get the ongoing user guess.
      * @returns the String of the current user guess.
      */
-    updateCurGuess() {
+    getCurGuess() {
         var tiles = this.#currentRow.querySelector('.row').querySelectorAll('game-tile');
         var guess = '';
         for (let index = 0; index < tiles.length; index++) {
@@ -177,7 +182,7 @@ class wordleSuggestView {
             }
             break;
         }
-        this.#currentGuess = guess;
+        return guess;
     }
 
     
