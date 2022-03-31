@@ -20,8 +20,8 @@ class wordleSuggestView {
      * variables. Initializes input handling.
      */
     initializeView() {
-        this.#currentRow = this.getCurRow();
-        this.#currentGuess = this.getCurGuess();
+        this.updateRow();
+        this.updateCurGuess();
         this.keyboardEventHandling();
     }
 
@@ -36,9 +36,13 @@ class wordleSuggestView {
                 this.updateRow();
             }
             else if (event.key == 'Tab') {
-                this.nextSuggestion();
+                this.updateView();
             }
             else {
+                this.updateCurGuess();
+                this.#controller.makeGuess(this.#currentGuess);
+                console.log(this.#currentGuess);
+                console.log(this.#model.currentSuggestion);
                 this.updateView();
             }
 
@@ -47,37 +51,12 @@ class wordleSuggestView {
     }
 
     /**
-     * Updates the current row selector.
-     */
-    updateRow() {
-        this.#currentRow = this.getCurRow();
-    }
-
-    /**
      * Updates the suggestion shown on screen.
      * @returns null;
      */
     updateView() {
-        this.#currentGuess = this.getCurGuess();
-        if (this.#currentGuess.length == 0) {
-            this.clearSuggestion();
-            return;
-        }
-        if (this.#currentGuess.length == 5) {
-            return;
-        }
         this.displaySuggestion();
 
-    }
-
-    /**
-     * Clears the suggestion bar.
-     */
-    clearSuggestion() {
-        var tiles = this.#currentRow.querySelector('.row').querySelectorAll('game-tile');
-        for (var i = this.#model.getDictStack().length; i < 5; i++) {
-            this.removeSuggestion(tiles[i]);
-        }
     }
 
     /**
@@ -86,30 +65,25 @@ class wordleSuggestView {
      * @returns 
      */
     displaySuggestion() {
-        var tiles = this.#currentRow.querySelector('.row').querySelectorAll('game-tile');
-        this.#controller.makeGuess(this.#currentGuess);
-        var curDict = this.#model.peekDictStack();
-        console.log(curDict);
-        if (curDict.length == 0) {
-            this.clearSuggestion();
+        this.clearSuggestion();
+        this.#controller.updateSuggestion();
+        if (this.#model.currentSuggestion.length == 0) {
             return;
         }
-        //TODO: ADD A WAY TO GO TO NEXT IN DICT
-        var suggestion = this.#controller.getSuggestion();
-        for (var i = this.#model.getDictStack().length; i < 5; i++) {
+        var tiles = this.#currentRow.querySelector('.row').querySelectorAll('game-tile');
+        var suggestion = this.#model.currentSuggestion;
+        for (var i = 5 - suggestion.length; i < 5; i++) {
             this.addSuggestion(tiles[i], suggestion.charAt(i - this.#model.getDictStack().length))
         }
     }
 
-    nextSuggestion() {
+    /**
+     * Clears the suggestion bar.
+     */
+     clearSuggestion() {
         var tiles = this.#currentRow.querySelector('.row').querySelectorAll('game-tile');
-        var suggestion = this.#controller.getSuggestion();
-        var curDict = this.#model.peekDictStack();
-        if (curDict.length == 0) {
-            return;
-        }
         for (var i = this.#model.getDictStack().length; i < 5; i++) {
-            this.addSuggestion(tiles[i], suggestion.charAt(i - this.#model.getDictStack().length))
+            this.removeSuggestion(tiles[i]);
         }
     }
 
@@ -126,6 +100,13 @@ class wordleSuggestView {
         x = x.querySelector('#board');
         x = x.querySelectorAll('game-row');
         return x;
+    }
+
+    /**
+     * Updates the current row selector.
+     */
+     updateRow() {
+        this.#currentRow = this.getCurRow();
     }
 
     /**
@@ -185,7 +166,7 @@ class wordleSuggestView {
      * Get the ongoing user guess.
      * @returns the String of the current user guess.
      */
-    getCurGuess() {
+    updateCurGuess() {
         var tiles = this.#currentRow.querySelector('.row').querySelectorAll('game-tile');
         var guess = '';
         for (let index = 0; index < tiles.length; index++) {
@@ -196,7 +177,7 @@ class wordleSuggestView {
             }
             break;
         }
-        return guess;
+        this.#currentGuess = guess;
     }
 
     
