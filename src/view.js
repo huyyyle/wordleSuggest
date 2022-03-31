@@ -91,7 +91,7 @@ class wordleSuggestView {
         var tiles = this.#currentRow.querySelector('.row').querySelectorAll('game-tile');
         var suggestion = this.#currentSuggestion;
         for (var i = 5 - suggestion.length; i < 5; i++) {
-            this.addSuggestion(tiles[i], suggestion.charAt(i - this.#model.getDictStack().length))
+            this.addSuggestion(tiles[i], suggestion.charAt(i - this.#model.getLength()))
         }
     }
 
@@ -101,7 +101,7 @@ class wordleSuggestView {
      */
     clearSuggestion() {
         var tiles = this.#currentRow.querySelector('.row').querySelectorAll('game-tile');
-        for (var i = this.#model.getDictStack().length; i < 5; i++) {
+        for (var i = this.#model.getLength(); i < 5; i++) {
             this.removeSuggestion(tiles[i]);
         }
     }
