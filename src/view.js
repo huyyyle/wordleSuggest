@@ -181,6 +181,10 @@ class wordleSuggestView {
         }
     }
 
+    /**
+     * Update the current guess field
+     * with the current value.
+     */
     updateCurGuess() {
         this.#currentGuess = this.getCurGuess();
     }
