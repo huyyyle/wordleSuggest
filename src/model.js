@@ -1,3 +1,7 @@
+/**
+ * The model is responsible for storing the dictionary,
+ * and calculating possible suggestions.
+ */
 class wordleSuggestModel {
     #allWords;
     #previousGuess;

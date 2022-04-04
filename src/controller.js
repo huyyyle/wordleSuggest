@@ -1,3 +1,7 @@
+/**
+ * The controller is responsible for calling functions
+ * to update the model.
+ */
 class wordleSuggestController {
     #model;
 

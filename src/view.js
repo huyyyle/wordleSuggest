@@ -1,3 +1,7 @@
+/**
+ * The view class is responsible for processing and displaying suggestions
+ * stored in the Model, and updating suggestions via the controller.
+ */
 class wordleSuggestView {
     #model;
     #controller;
@@ -44,6 +48,7 @@ class wordleSuggestView {
                 this.updateSuggestion();
                 this.displaySuggestion();
             }
+            //any alphabetical key
             else if ((event.keyCode >= 65 && event.keyCode <= 90)){
                 this.updateSuggestion();
                 this.displaySuggestion();
@@ -65,6 +70,7 @@ class wordleSuggestView {
             this.#dictIndex = 0;
         }
         var curDict = this.#model.peekDictStack();
+        //skip if no suggestions are available
         if (curDict.length == 0) {
             this.#currentSuggestion = "";
             return;
@@ -119,14 +125,11 @@ class wordleSuggestView {
      * @returns the element containing the Wordle Board.
      */
     getInjectionSite() {
-        var x = document.querySelector("game-app");
-        x = x.shadowRoot;
-        x = x.querySelector("game-theme-manager");
-        x = x.querySelector("#game");
-        x = x.querySelector('#board-container');
-        x = x.querySelector('#board');
-        x = x.querySelectorAll('game-row');
-        return x;
+        var site = document.querySelector("game-app").shadowRoot;
+        site = site.querySelector("game-theme-manager").querySelector("#game");
+        site = site.querySelector('#board-container').querySelector('#board');
+        site = site.querySelectorAll('game-row');
+        return site;
     }
 
     /**
