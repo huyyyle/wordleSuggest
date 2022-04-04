@@ -9,7 +9,10 @@ are taken alphabetically from the list of possible words.
 Simply add the extension to chrome, and it will run when Wordle is opened. You can press Tab to cycle through
 suggestions alphabetically.
 
+Works on: https://www.nytimes.com/games/wordle/index.html
+
 ## Installation
+Install the extension via the chrome webstore.
 https://chrome.google.com/webstore/detail/wordlesuggest/gglbpeofjcjkofejocefcncolhkldhom
 
 ## TO DOs
